@@ -2,19 +2,59 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# BioCore: Deine Biohacking & Lifestyle App
 
-This contains everything you need to run your app locally.
+**BioCore** ist deine ultimative App zur ganzheitlichen Optimierung von Körper, Geist und Alltag. Basierend auf bewährten Biohacking-Prinzipien hilft dir BioCore dabei, gesunde Gewohnheiten zu etablieren, deine Ernährung zu optimieren und kontinuierlich an dir zu wachsen. Durch ein motivierendes Gamification-System bleibst du jeden Tag am Ball.
 
-View your app in AI Studio: https://ai.studio/apps/4b88300a-1b20-4489-b30b-8d937d060437
+---
 
-## Run Locally
+## 🌟 Hauptfunktionen
 
-**Prerequisites:**  Node.js
+### 📊 Dashboard & Gamification
+Behalte deinen täglichen Fortschritt im Blick. Für jede abgeschlossene Aufgabe, Routine oder eingenommene Supplemente sammelst du **XP (Erfahrungspunkte)**. Steige im Level auf, verfolge deine Statistiken und feiere deine Erfolge (inklusive Konfetti-Regen bei 100% Tagesziel!).
+<div align="center">
+  <img width="800" alt="Dashboard Preview" src="https://placehold.co/800x450/1a1a1a/facc15?text=Dashboard+%26+Fortschritt" />
+</div>
 
+### 🔄 Routinen & Supplement-Tracking
+Erschaffe den perfekten Tag mit maßgeschneiderten Protokollen:
+*   **Morgen- & Abendroutinen:** Vom "Power Wasser" am Morgen bis zum "Bildschirme ausschalten" am Abend.
+*   **Tagesaufgaben:** Tracke deine Wasseraufnahme, Schritte und tägliche Bewegung.
+*   **Supplemente:** Verpasse nie wieder deine Vitamine und Nahrungsergänzungsmittel (z.B. D3+K2, Omega 3, Creapure).
+*   **Benachrichtigungs-Engine:** Synchronisiere deine Routinen mit deinem Wecker und erhalte smarte Push-Erinnerungen genau zur richtigen Zeit.
+<div align="center">
+  <img width="800" alt="Routines Preview" src="https://placehold.co/800x450/1a1a1a/facc15?text=Routinen+%26+Benachrichtigungen" />
+</div>
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### 🛒 Intelligente Einkaufsliste
+Eine speziell auf Biohacking und Performance ausgelegte Einkaufsliste. Von Weidebutter und Ribeye Steak über Wild Heidelbeeren bis hin zu Knochenbrühe – alles ist übersichtlich in Kategorien (Fleisch, Gemüse, Fette & Öle, Supplemente etc.) unterteilt. Abgehakte Items können bei Bedarf einfach wiederhergestellt werden.
+<div align="center">
+  <img width="800" alt="Shopping List Preview" src="https://placehold.co/800x450/1a1a1a/facc15?text=Biohacking+Einkaufsliste" />
+</div>
+
+### 🧠 Bildung & Wissensdatenbank
+Wissen ist Macht. In der integrierten Bildungs-Sektion kannst du dir Videos und Artikel zu den Themen Gesundheit, Schlaf, Ernährung und Fitness ansehen. Bilde dich weiter, hake konsumierte Inhalte ab und verdiene dir dadurch massive Bonus-XP für dein Profil.
+<div align="center">
+  <img width="800" alt="Education Preview" src="https://placehold.co/800x450/1a1a1a/facc15?text=Wissensdatenbank+%26+Lernen" />
+</div>
+
+---
+
+## 🚀 Lokal ausführen
+
+Dieses Repository enthält alles, was du benötigst, um deine AI Studio App lokal auszuführen und bereitzustellen.
+
+Sieh dir deine App im AI Studio an: [BioCore in AI Studio](https://ai.studio/apps/4b88300a-1b20-4489-b30b-8d937d060437)
+
+**Voraussetzungen:** Node.js
+
+1. **Abhängigkeiten installieren:**
+   ```bash
+   npm install
+   ```
+2. **Umgebungsvariablen setzen:**
+   Setze den `GEMINI_API_KEY` in der Datei `.env.local` auf deinen Gemini API-Schlüssel.
+3. **App starten:**
+   ```bash
+   npm run dev
+   ```
