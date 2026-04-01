@@ -1,0 +1,21 @@
+{
+  "name": "Biohacker App",
+  "short_name": "Biohacker",
+  "description": "Dein täglicher Begleiter für Gesundheit und Performance.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#facc15",
+  "icons": [
+    {
+      "src": "https://picsum.photos/seed/biohacker-192/192/192",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://picsum.photos/seed/biohacker-512/512/512",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

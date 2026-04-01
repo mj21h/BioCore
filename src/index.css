@@ -1,0 +1,55 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap');
+
+@theme {
+  --font-headline: "Space Grotesk", sans-serif;
+  --font-sans: "Inter", sans-serif;
+
+  --color-background: #111317;
+  --color-surface: #111317;
+  --color-surface-container-low: #1a1c20;
+  --color-surface-container-high: #282a2e;
+  --color-surface-container-highest: #333539;
+  --color-surface-bright: #37393e;
+  
+  --color-primary: #adc6ff;
+  --color-primary-container: #4b8eff;
+  --color-on-primary: #002e69;
+  --color-on-primary-container: #00285c;
+
+  --color-secondary: #d7ffc5;
+  --color-secondary-container: #2ff801;
+  --color-on-secondary: #053900;
+  --color-on-secondary-container: #0f6d00;
+
+  --color-tertiary: #59d8de;
+  --color-on-tertiary: #003739;
+  
+  --color-outline: #8b90a0;
+  --color-outline-variant: #414755;
+  
+  --color-on-surface: #e2e2e8;
+  --color-on-surface-variant: #c1c6d7;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface font-sans antialiased;
+  }
+}
+
+.vitality-glow {
+  box-shadow: 0 0 12px rgba(250, 204, 21, 0.3);
+}
+
+.obsidian-card {
+  @apply bg-surface-container-low border-l-2 border-transparent transition-all duration-300;
+}
+
+.obsidian-card.active {
+  @apply border-yellow-400;
+}
+
+.glass-panel {
+  @apply bg-surface-container-low/80 backdrop-blur-xl border-t border-outline-variant/15;
+}
