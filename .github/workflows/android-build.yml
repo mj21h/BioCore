@@ -45,9 +45,7 @@ jobs:
 
       - name: Fix Gradle Wrapper
         working-directory: android
-        run: |
-          rm -f gradle/wrapper/gradle-wrapper.jar
-          wget https://raw.githubusercontent.com/gradle/gradle/v8.7.0/gradle/wrapper/gradle-wrapper.jar -O gradle/wrapper/gradle-wrapper.jar
+        run: gradle wrapper
 
       - name: Build APK
         working-directory: android
