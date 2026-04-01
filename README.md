@@ -1,10 +1,18 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
-
 # BioCore: Deine Biohacking & Lifestyle App
 
 **BioCore** ist deine ultimative App zur ganzheitlichen Optimierung von Körper, Geist und Alltag. Basierend auf bewährten Biohacking-Prinzipien hilft dir BioCore dabei, gesunde Gewohnheiten zu etablieren, deine Ernährung zu optimieren und kontinuierlich an dir zu wachsen. Durch ein motivierendes Gamification-System bleibst du jeden Tag am Ball.
+
+---
+
+## ⚡ Unterstütze das Projekt
+
+Wenn dir BioCore gefällt, freue ich mich über eine Spende über das **Bitcoin Lightning Network** – sofort, gebührenfrei und ohne Mittelsmann.
+
+[![Bitcoin Lightning](https://img.shields.io/badge/Bitcoin_Lightning-Spenden-F7931A?style=for-the-badge&logo=bitcoin&logoColor=white)](lightning:hulkingfiver918@walletofsatoshi.com)
+
+**Lightning-Adresse:** `hulkingfiver918@walletofsatoshi.com`
+
+> Kein Lightning-Wallet? Einfach [Wallet of Satoshi](https://www.walletofsatoshi.com/) oder [Phoenix](https://phoenix.acinq.co/) installieren – in wenigen Minuten einsatzbereit.
 
 ---
 
@@ -37,24 +45,3 @@ Wissen ist Macht. In der integrierten Bildungs-Sektion kannst du dir Videos und 
 <div align="center">
   <img width="800" alt="Education Preview" src="https://placehold.co/800x450/1a1a1a/facc15?text=Wissensdatenbank+%26+Lernen" />
 </div>
-
----
-
-## 🚀 Lokal ausführen
-
-Dieses Repository enthält alles, was du benötigst, um deine AI Studio App lokal auszuführen und bereitzustellen.
-
-Sieh dir deine App im AI Studio an: [BioCore in AI Studio](https://ai.studio/apps/4b88300a-1b20-4489-b30b-8d937d060437)
-
-**Voraussetzungen:** Node.js
-
-1. **Abhängigkeiten installieren:**
-   ```bash
-   npm install
-   ```
-2. **Umgebungsvariablen setzen:**
-   Setze den `GEMINI_API_KEY` in der Datei `.env.local` auf deinen Gemini API-Schlüssel.
-3. **App starten:**
-   ```bash
-   npm run dev
-   ```
