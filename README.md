@@ -8,9 +8,10 @@
 
 Wenn dir BioCore gefällt, freue ich mich über eine Spende über das **Bitcoin Lightning Network** – sofort, gebührenfrei und ohne Mittelsmann.
 
-[![Bitcoin Lightning](https://img.shields.io/badge/Bitcoin_Lightning-Spenden-F7931A?style=for-the-badge&logo=bitcoin&logoColor=white)](lightning:hulkingfiver918@walletofsatoshi.com)
-
-**Lightning-Adresse:** `hulkingfiver918@walletofsatoshi.com`
+**Lightning-Adresse:** 
+```text
+hulkingfiver918@walletofsatoshi.com
+```
 
 > Kein Lightning-Wallet? Einfach [Wallet of Satoshi](https://www.walletofsatoshi.com/) oder [Phoenix](https://phoenix.acinq.co/) installieren – in wenigen Minuten einsatzbereit.
 
