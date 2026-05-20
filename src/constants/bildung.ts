@@ -214,6 +214,15 @@ export const LIBRARY_ITEMS = [
     image: 'https://picsum.photos/seed/finance/800/400',
     emoji: '₿',
     duration: '20:12'
+  },
+  {
+    id: 'kniebeugen_video',
+    title: 'Kniebeugen täglich',
+    description: 'Dr. med. Tobias Weigl erklärt im Detail, was in deinem Körper passiert, wenn du täglich Kniebeugen machst: von der Stärkung der Beine und des Rumpfes über Gelenkgesundheit bis hin zur hormonellen Stimulation und Stoffwechselanregung.',
+    url: 'https://youtu.be/BwvW80PHk88?si=JKFeOp2seH34uEym',
+    image: 'https://picsum.photos/seed/squat_health/800/400',
+    emoji: '🦵',
+    duration: '11:15'
   }
 ];
 
@@ -228,7 +237,7 @@ export const GROUPS = [
     id: 'level-2',
     title: 'Level 2: Körper',
     bonus: 7500,
-    itemIds: ['schlaf', 'ernaehrung', 'routine', 'lebensmittelreinigung']
+    itemIds: ['schlaf', 'ernaehrung', 'routine', 'lebensmittelreinigung', 'kniebeugen_video']
   },
   {
     id: 'level-3',

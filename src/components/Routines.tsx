@@ -5,6 +5,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { INITIAL_MORNING_ROUTINES, INITIAL_EVENING_ROUTINES, INITIAL_DAILY_TASKS, INITIAL_SUPPLEMENTS } from '../constants';
 import { RoutineItem, Supplement } from '../types';
 import { ICON_MAP, SELECTABLE_ICONS } from '../lib/icons';
+import { requestNotificationPermission, checkNotificationPermission, showTestNotification } from '../lib/notifications';
 
 export default function Routines({
   routines,
@@ -207,25 +208,12 @@ export default function Routines({
   const handleToggleNotifications = async () => {
     try {
       if (!notificationsEnabled) {
-        if ('Notification' in window) {
-          let permission = Notification.permission;
-          
-          if (permission === 'default') {
-            permission = await Notification.requestPermission();
-          }
-          
-          if (permission === 'granted') {
-            setNotificationsEnabled(true);
-            const notif = new Notification('Erinnerungen aktiviert! 🚀', {
-              body: `Du wirst nun an deine Routinen erinnert.`,
-              icon: '/favicon.ico'
-            });
-            notif.onclick = () => window.focus();
-          } else if (permission === 'denied') {
-            alert('Benachrichtigungen wurden blockiert. Bitte aktiviere sie in den Browsereinstellungen (Klick auf das Schloss-Icon in der Adressleiste), um Erinnerungen zu erhalten.');
-          }
+        const granted = await requestNotificationPermission();
+        if (granted) {
+          setNotificationsEnabled(true);
+          await showTestNotification();
         } else {
-          alert('Dein Browser unterstützt leider keine Push-Benachrichtigungen.');
+          alert('Benachrichtigungs-Berechtigung wurde abgelehnt oder blockiert. Bitte aktiviere sie in deinen Geräteeinstellungen.');
         }
       } else {
         setNotificationsEnabled(false);
@@ -236,13 +224,10 @@ export default function Routines({
     }
   };
 
-  const testNotification = () => {
-    if (notificationsEnabled && 'Notification' in window && Notification.permission === 'granted') {
-      const notif = new Notification('Test: Guten Morgen! ☀️', {
-        body: 'Zeit für deine Morgen-Routine. Starte optimal in den Tag!',
-        icon: '/favicon.ico'
-      });
-      notif.onclick = () => window.focus();
+  const testNotification = async () => {
+    const permGranted = await checkNotificationPermission();
+    if (notificationsEnabled && permGranted) {
+      await showTestNotification();
     } else {
       alert('Bitte aktiviere zuerst die Push-Benachrichtigungen.');
     }

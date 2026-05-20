@@ -18,6 +18,7 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import { GROUPS, LIBRARY_ITEMS } from './constants/bildung';
 
 import { getLevelFromXP } from './lib/xp';
+import { rescheduleAllNativeNotifications, checkNotificationPermission } from './lib/notifications';
 
 import { INITIAL_MORNING_ROUTINES, INITIAL_EVENING_ROUTINES, INITIAL_DAILY_TASKS, INITIAL_SUPPLEMENTS, SHOPPING_LIST_CATEGORIES } from './constants';
 
@@ -178,6 +179,58 @@ export default function App() {
     }
   }, [routines, setRoutines]);
 
+  // Migration: Add 25 Squats (m_squats and e_squats) if missing
+  useEffect(() => {
+    const hasMorningSquats = routines.some(r => r.id === 'm_squats' || r.title === '25 Kniebeugen');
+    if (!hasMorningSquats) {
+      setRoutines([
+        ...routines,
+        {
+          id: 'm_squats',
+          title: '25 Kniebeugen',
+          value: '25 WDH',
+          icon: 'Activity',
+          completed: false,
+          color: 'text-yellow-400',
+          protocol: [
+            'Stelle die Füße schulterbreit auf',
+            'Gehe tief in die Hocke, halte den Rücken gerade',
+            'Knie zeigen leicht nach außen',
+            'Atme beim Runtergehen ein, beim Aufstehen kräftig aus',
+            'Absolviere 25 saubere Wiederholungen'
+          ],
+          videoUrl: 'https://youtu.be/BwvW80PHk88?si=JKFeOp2seH34uEym',
+          reminderTime: '08:00',
+          reminderSyncWithWecker: true
+        }
+      ]);
+    }
+
+    const hasEveningSquats = eveningRoutines.some(r => r.id === 'e_squats' || r.title === '25 Kniebeugen');
+    if (!hasEveningSquats) {
+      setEveningRoutines([
+        ...eveningRoutines,
+        {
+          id: 'e_squats',
+          title: '25 Kniebeugen',
+          value: '25 WDH',
+          icon: 'Activity',
+          completed: false,
+          color: 'text-yellow-400',
+          protocol: [
+            'Stelle die Füße schulterbreit auf',
+            'Gehe tief in die Hocke, halte den Rücken gerade',
+            'Knie zeigen leicht nach außen',
+            'Atme beim Runtergehen ein, beim Aufstehen kräftig aus',
+            'Absolviere 25 saubere Wiederholungen'
+          ],
+          videoUrl: 'https://youtu.be/BwvW80PHk88?si=JKFeOp2seH34uEym',
+          reminderTime: '20:30'
+        }
+      ]);
+    }
+  }, [routines, eveningRoutines, setRoutines, setEveningRoutines]);
+
   // Migration: Rename Kreatin to Creapure in all routines and supplements
   useEffect(() => {
     let changed = false;
@@ -306,9 +359,15 @@ export default function App() {
 
   // Enable notifications by default on first visit if permission is granted
   useEffect(() => {
-    if (isFirstVisit === false && 'Notification' in window && Notification.permission === 'granted') {
-      setNotificationsEnabled(true);
-    }
+    const checkPerms = async () => {
+      if (isFirstVisit === false) {
+        const granted = await checkNotificationPermission();
+        if (granted) {
+          setNotificationsEnabled(true);
+        }
+      }
+    };
+    checkPerms();
   }, [isFirstVisit, setNotificationsEnabled]);
 
   // Undo System
@@ -370,6 +429,7 @@ export default function App() {
         let newLevel = getLevelFromXP(newTotalXP + bildungXP);
 
         setProfile({
+          ...profile,
           level: newLevel,
           totalXP: newTotalXP,
           lastResetDate: today
@@ -455,6 +515,59 @@ export default function App() {
     const interval = setInterval(checkReminders, 30000); // Check every 30 seconds
     return () => clearInterval(interval);
   }, [routines, eveningRoutines, dailyTasks, supplements, wakeUpTime, notificationsEnabled, weckerSyncEnabled, sentNotifications, setSentNotifications]);
+
+  // Handle native notifications rescheduling
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    if (!notificationsEnabled) {
+      rescheduleAllNativeNotifications([]);
+      return;
+    }
+
+    const scheduleItems: any[] = [];
+    
+    // 1. Regular Wake Up Time
+    if (weckerSyncEnabled && wakeUpTime) {
+      scheduleItems.push({
+        id: 'wakeup',
+        title: 'Guten Morgen! ☀️',
+        body: 'Zeit für dein Biohacking-Protokoll. Starte optimal in den Tag!',
+        time: wakeUpTime
+      });
+    }
+
+    // 2. All Routines & Supplements
+    const allItems = [
+      ...routines.map(r => ({ ...r, type: 'Morgen-Routine' })),
+      ...eveningRoutines.map(r => ({ ...r, type: 'Abend-Routine' })),
+      ...dailyTasks.map(t => ({ ...t, type: 'Tagesaufgabe' })),
+      ...supplements.map(s => ({ ...s, title: s.name, type: 'Supplement' }))
+    ];
+
+    allItems.forEach(item => {
+      let reminderTime = item.reminderTime;
+
+      // Handle Wecker Sync (+5 min)
+      if ('reminderSyncWithWecker' in item && item.reminderSyncWithWecker) {
+        const [h, m] = wakeUpTime.split(':').map(Number);
+        const d = new Date();
+        d.setHours(h, m + 5, 0);
+        reminderTime = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+      }
+
+      if (reminderTime) {
+        scheduleItems.push({
+          id: item.id,
+          title: `Erinnerung: ${item.title}`,
+          body: `Zeit für deine ${item.type}: ${item.title}.`,
+          time: reminderTime
+        });
+      }
+    });
+
+    rescheduleAllNativeNotifications(scheduleItems);
+  }, [routines, eveningRoutines, dailyTasks, supplements, wakeUpTime, notificationsEnabled, weckerSyncEnabled]);
 
   return (
     <Layout 

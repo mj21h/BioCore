@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   X
 } from 'lucide-react';
+import { requestNotificationPermission } from '../lib/notifications';
 
 interface OnboardingProps {
   onComplete: () => void;
@@ -75,12 +76,9 @@ export default function Onboarding({ onComplete, setNotificationsEnabled }: Onbo
   const [showPermissionPopup, setShowPermissionPopup] = useState(false);
 
   const requestPermissions = async () => {
-    if ('Notification' in window) {
-      const permission = await Notification.requestPermission();
-      console.log('Notification permission:', permission);
-      if (permission === 'granted') {
-        setNotificationsEnabled(true);
-      }
+    const granted = await requestNotificationPermission();
+    if (granted) {
+      setNotificationsEnabled(true);
     }
     // Alarm permission simulation
     setShowPermissionPopup(false);

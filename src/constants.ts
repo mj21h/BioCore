@@ -49,10 +49,45 @@ export const INITIAL_MORNING_ROUTINES: RoutineItem[] = [
       '3-5 Minuten tiefes Atmen während der Übungen'
     ]
   },
+  {
+    id: 'm_squats',
+    title: '25 Kniebeugen',
+    value: '25 WDH',
+    icon: 'Activity',
+    completed: false,
+    color: 'text-yellow-400',
+    protocol: [
+      'Stelle die Füße schulterbreit auf',
+      'Gehe tief in die Hocke, halte den Rücken gerade',
+      'Knie zeigen leicht nach außen',
+      'Atme beim Runtergehen ein, beim Aufstehen kräftig aus',
+      'Absolviere 25 saubere Wiederholungen'
+    ],
+    videoUrl: 'https://youtu.be/BwvW80PHk88?si=JKFeOp2seH34uEym',
+    reminderTime: '08:00',
+    reminderSyncWithWecker: true
+  }
 ];
 
 export const INITIAL_EVENING_ROUTINES: RoutineItem[] = [
   { id: 'e1', title: 'Bildschirme ausschalten', value: 'AB 20:00', icon: 'Moon', completed: false, color: 'text-yellow-400' },
+  {
+    id: 'e_squats',
+    title: '25 Kniebeugen',
+    value: '25 WDH',
+    icon: 'Activity',
+    completed: false,
+    color: 'text-yellow-400',
+    protocol: [
+      'Stelle die Füße schulterbreit auf',
+      'Gehe tief in die Hocke, halte den Rücken gerade',
+      'Knie zeigen leicht nach außen',
+      'Atme beim Runtergehen ein, beim Aufstehen kräftig aus',
+      'Absolviere 25 saubere Wiederholungen'
+    ],
+    videoUrl: 'https://youtu.be/BwvW80PHk88?si=JKFeOp2seH34uEym',
+    reminderTime: '20:30'
+  }
 ];
 
 export const INITIAL_DAILY_TASKS: RoutineItem[] = [
