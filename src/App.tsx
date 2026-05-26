@@ -18,7 +18,7 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import { GROUPS, LIBRARY_ITEMS } from './constants/bildung';
 
 import { getLevelFromXP } from './lib/xp';
-import { rescheduleAllNativeNotifications, checkNotificationPermission } from './lib/notifications';
+import { rescheduleAllNativeNotifications, checkNotificationPermission, getSystemNextAlarm } from './lib/notifications';
 
 import { INITIAL_MORNING_ROUTINES, INITIAL_EVENING_ROUTINES, INITIAL_DAILY_TASKS, INITIAL_SUPPLEMENTS, SHOPPING_LIST_CATEGORIES } from './constants';
 
@@ -47,7 +47,7 @@ export default function App() {
   const [dailyTasks, setDailyTasks] = useLocalStorage('biohacker_dailyTasks', INITIAL_DAILY_TASKS);
   const [shoppingList, setShoppingList] = useLocalStorage<any[]>('biohacker_shoppingList', SHOPPING_LIST_CATEGORIES);
 
-  // Migration: Ensure new shopping list items are added
+  // Migration: Ensure new shopping list items are added (excluding redundant similar entries)
   useEffect(() => {
     if (!shoppingList || shoppingList.length === 0) return;
 
@@ -57,18 +57,16 @@ export default function App() {
       { category: 'Gemüse', item: { id: 'v12', name: 'Ingwer', completed: false } },
       { category: 'Fleisch', item: { id: 'm12', name: 'Rinderhackfleisch', completed: false } },
       { category: 'Fleisch', item: { id: 'm13', name: 'Ribeye Steak', completed: false } },
-      { category: 'Fleisch', item: { id: 'm14', name: 'Hähnchen', completed: false } },
-      { category: 'Fleisch', item: { id: 'm15', name: 'Rinderleber', completed: false } },
       { category: 'Käse', item: { id: 'c9', name: 'Bergkäse', completed: false } },
       { category: 'Gemüse', item: { id: 'v13', name: 'Karotten', completed: false } },
       { category: 'Gemüse', item: { id: 'v14', name: 'Gurke', completed: false } },
       { category: 'Gemüse', item: { id: 'v15', name: 'Sauerkraut', completed: false } },
       { category: 'Gemüse', item: { id: 'v16', name: 'Zucchini', completed: false } },
-      { category: 'Milchprodukte', item: { id: 'd11', name: 'Eier', completed: false } },
       { category: 'Nüsse & Samen', item: { id: 'n6', name: 'Macadamia-Nüsse', completed: false } },
-      { category: 'Fisch', item: { id: 'f9', name: 'Sardinen', completed: false } },
-      { category: 'Fisch', item: { id: 'f10', name: 'Wildlachs', completed: false } },
-      { category: 'Getränke', item: { id: 'b7', name: 'Knochenbrühe', completed: false } }
+      { category: 'Nüsse & Samen', item: { id: 'n7', name: 'Chiasamen', completed: false } },
+      { category: 'Nüsse & Samen', item: { id: 'n8', name: 'Flohsamenschalen', completed: false } },
+      { category: 'Nüsse & Samen', item: { id: 'n9', name: 'Mandelmus', completed: false } },
+      { category: 'Nüsse & Samen', item: { id: 'n10', name: 'Leinsamenmehl', completed: false } }
     ];
 
     let changed = false;
@@ -77,12 +75,146 @@ export default function App() {
     itemsToAdd.forEach(({ category, item }) => {
       const catIndex = newList.findIndex(c => c.category === category);
       if (catIndex !== -1) {
-        const hasItem = newList[catIndex].items.some((i: any) => i.name === item.name);
+        const hasItem = newList[catIndex].items.some((i: any) => i.name.toLowerCase() === item.name.toLowerCase());
         if (!hasItem) {
           newList[catIndex].items.push(item);
           changed = true;
         }
       }
+    });
+
+    if (changed) {
+      setShoppingList(newList);
+    }
+  }, [shoppingList, setShoppingList]);
+
+  // Migration: Automatically search and remove similar/duplicate entries, migrate Getreide-Alternativen to Nüsse & Samen
+  useEffect(() => {
+    if (!shoppingList || shoppingList.length === 0) return;
+
+    let changed = false;
+    let getreideItems: any[] = [];
+
+    // 1. Remove Getreide-Alternativen and extract its items
+    let filteredList = shoppingList.filter(cat => {
+      if (cat.category === 'Getreide-Alternativen') {
+        getreideItems = cat.items || [];
+        changed = true;
+        return false;
+      }
+      return true;
+    });
+
+    // Ensure Nüsse & Samen exists to hold the migrated/moved items
+    let nuesseSamenIndex = filteredList.findIndex(cat => cat.category === 'Nüsse & Samen');
+    if (nuesseSamenIndex === -1 && getreideItems.length > 0) {
+      const initialNuesseSamen = SHOPPING_LIST_CATEGORIES.find(cat => cat.category === 'Nüsse & Samen');
+      if (initialNuesseSamen) {
+        filteredList.push({ ...initialNuesseSamen, items: [] });
+        nuesseSamenIndex = filteredList.length - 1;
+        changed = true;
+      }
+    }
+
+    // Merge extracted items into Nüsse & Samen safely
+    if (getreideItems.length > 0 && nuesseSamenIndex !== -1) {
+      const nuesseSamenCat = { ...filteredList[nuesseSamenIndex] };
+      nuesseSamenCat.items = [...nuesseSamenCat.items];
+
+      getreideItems.forEach((subItem: any) => {
+        const nameLower = subItem.name.trim().toLowerCase();
+        const existingItemIndex = nuesseSamenCat.items.findIndex(
+          (i: any) => i.name.trim().toLowerCase() === nameLower
+        );
+
+        if (existingItemIndex === -1) {
+          nuesseSamenCat.items.push({
+            id: 'n_mig_' + subItem.id,
+            name: subItem.name,
+            completed: subItem.completed || false
+          });
+          changed = true;
+        } else {
+          if (subItem.completed && !nuesseSamenCat.items[existingItemIndex].completed) {
+            nuesseSamenCat.items[existingItemIndex].completed = true;
+            changed = true;
+          }
+        }
+      });
+
+      filteredList[nuesseSamenIndex] = nuesseSamenCat;
+    }
+
+    // 2. Clear exact duplicates and similar entries in categories, and handle cross-category misplacement (like Kürbiskerne left behind)
+    const hasNuesseSamen = filteredList.some(cat => cat.category === 'Nüsse & Samen');
+    
+    const newList = filteredList.map(cat => {
+      const items = [...cat.items];
+      const initialLength = items.length;
+
+      // Check current category item existence
+      const hasHaehnchenbrust = items.some(i => i.name.toLowerCase() === 'hähnchenbrust');
+      const hasRinderleberWeide = items.some(i => i.name.toLowerCase() === 'rinderleber (weiderind)');
+      const hasEierDetail = items.some(i => i.name.toLowerCase() === 'eier (insb. eigelb)');
+      const hasLachsWild = items.some(i => i.name.toLowerCase() === 'lachs (wild)');
+      const hasSardinenOel = items.some(i => i.name.toLowerCase() === 'sardinen in olivenöl');
+      const hasKnochenbrueheSelbst = items.some(i => i.name.toLowerCase() === 'knochenbrühe selbstgemacht');
+
+      const filteredItems = items.filter(i => {
+        const nameLower = i.name.trim().toLowerCase();
+
+        // Cross-category checks: If we have 'Nüsse & Samen', remove moved item names from all other categories
+        if (cat.category !== 'Nüsse & Samen' && hasNuesseSamen) {
+          if (
+            nameLower === 'kürbiskerne' ||
+            nameLower === 'chiasamen' ||
+            nameLower === 'flohsamenschalen' ||
+            nameLower === 'mandelmus' ||
+            nameLower === 'leinsamenmehl'
+          ) {
+            return false;
+          }
+        }
+
+        // 1. We remove 'hähnchen' if we already have 'hähnchenbrust'
+        if (nameLower === 'hähnchen' && hasHaehnchenbrust) return false;
+
+        // 2. We remove generic rinderleber / rindfleisch(leber) if we already have 'rinderleber (weiderind)'
+        if ((nameLower === 'rinderleber' || nameLower === 'rindfleisch (leber)') && hasRinderleberWeide) return false;
+
+        // 3. We remove simple 'eier' if we have 'eier (insb. eigelb)'
+        if (nameLower === 'eier' && hasEierDetail) return false;
+
+        // 4. We remove 'wildlachs' if we have 'lachs (wild)'
+        if (nameLower === 'wildlachs' && hasLachsWild) return false;
+
+        // 5. We remove 'sardinen' if we have 'sardinen in olivenöl'
+        if (nameLower === 'sardinen' && hasSardinenOel) return false;
+
+        // 6. We remove generic 'knochenbrühe' if we have 'knochenbrühe selbstgemacht'
+        if (nameLower === 'knochenbrühe' && hasKnochenbrueheSelbst) return false;
+
+        return true;
+      });
+
+      // Simple case-insensitive exact duplicate check within the single category
+      const seenNames = new Set<string>();
+      const uniqueItems = filteredItems.filter(i => {
+        const nameKey = i.name.trim().toLowerCase();
+        if (seenNames.has(nameKey)) {
+          return false;
+        }
+        seenNames.add(nameKey);
+        return true;
+      });
+
+      if (uniqueItems.length !== initialLength) {
+        changed = true;
+      }
+      return {
+        ...cat,
+        items: uniqueItems
+      };
     });
 
     if (changed) {
@@ -369,6 +501,28 @@ export default function App() {
     };
     checkPerms();
   }, [isFirstVisit, setNotificationsEnabled]);
+
+  // Synchronisieren des Weckers vom Android System
+  useEffect(() => {
+    if (!weckerSyncEnabled) return;
+
+    const syncAlarm = async () => {
+      const systemAlarm = await getSystemNextAlarm();
+      if (systemAlarm) {
+        setWakeUpTime(systemAlarm);
+        console.log('Wecker erfolgreich synchronisiert:', systemAlarm);
+      }
+    };
+
+    // Beim Laden und Einschalten ausführen
+    syncAlarm();
+
+    // Auch ausführen wenn das Fenster wieder fokussiert wird (Benutzer kommt zurück in die App)
+    window.addEventListener('focus', syncAlarm);
+    return () => {
+      window.removeEventListener('focus', syncAlarm);
+    };
+  }, [weckerSyncEnabled, setWakeUpTime]);
 
   // Undo System
   const [lastDeleted, setLastDeleted] = useState<{

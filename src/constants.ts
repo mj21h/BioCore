@@ -110,7 +110,6 @@ export const SHOPPING_LIST_CATEGORIES = [
       { id: 'm2', name: 'Putenbrust' },
       { id: 'm3', name: 'Hirschgulasch' },
       { id: 'm4', name: 'Rinderleber (Weiderind)' },
-      { id: 'm5', name: 'Rindfleisch (Leber)' },
       { id: 'm6', name: 'Rinderfilet' },
       { id: 'm7', name: 'Schweinefilet' },
       { id: 'm8', name: 'Schweinemedaillons' },
@@ -119,8 +118,6 @@ export const SHOPPING_LIST_CATEGORIES = [
       { id: 'm11', name: 'Entenbrust mit Haut' },
       { id: 'm12', name: 'Rinderhackfleisch' },
       { id: 'm13', name: 'Ribeye Steak' },
-      { id: 'm14', name: 'Hähnchen' },
-      { id: 'm15', name: 'Rinderleber' },
     ]
   },
   {
@@ -159,16 +156,6 @@ export const SHOPPING_LIST_CATEGORIES = [
     ]
   },
   {
-    category: 'Getreide-Alternativen',
-    items: [
-      { id: 'g1', name: 'Kürbiskerne' },
-      { id: 'g2', name: 'Mandelmus' },
-      { id: 'g3', name: 'Leinsamenmehl' },
-      { id: 'g4', name: 'Chiasamen' },
-      { id: 'g5', name: 'Flohsamenschalen' },
-    ]
-  },
-  {
     category: 'Milchprodukte',
     items: [
       { id: 'd1', name: 'Eier (insb. Eigelb)' },
@@ -181,7 +168,6 @@ export const SHOPPING_LIST_CATEGORIES = [
       { id: 'd7', name: 'Creme fraîche' },
       { id: 'd8', name: 'Mascarpone' },
       { id: 'd9', name: 'Weidebutter' },
-      { id: 'd11', name: 'Eier' },
     ]
   },
   {
@@ -193,6 +179,10 @@ export const SHOPPING_LIST_CATEGORIES = [
       { id: 'n4', name: 'Walnüsse' },
       { id: 'n5', name: 'Haselnüsse' },
       { id: 'n6', name: 'Macadamia-Nüsse' },
+      { id: 'n7', name: 'Chiasamen' },
+      { id: 'n8', name: 'Flohsamenschalen' },
+      { id: 'n9', name: 'Mandelmus' },
+      { id: 'n10', name: 'Leinsamenmehl' },
     ]
   },
   {
@@ -206,8 +196,6 @@ export const SHOPPING_LIST_CATEGORIES = [
       { id: 'f6', name: 'Makrele' },
       { id: 'f7', name: 'Forelle (ganz)' },
       { id: 'f8', name: 'Hering in Tomatensauce (zuckerfrei)' },
-      { id: 'f9', name: 'Sardinen' },
-      { id: 'f10', name: 'Wildlachs' },
     ]
   },
   {
@@ -219,7 +207,6 @@ export const SHOPPING_LIST_CATEGORIES = [
       { id: 'b4', name: 'Mineralwasser mit Apfelessig' },
       { id: 'b5', name: 'Grüner Tee kalt aufgegossen' },
       { id: 'b6', name: 'Süßungsmittel: Monk Fruit, Erythrit oder Stevia (flüssig)' },
-      { id: 'b7', name: 'Knochenbrühe' },
     ]
   },
   {

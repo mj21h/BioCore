@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AlarmClock, Timer, Plus, X, Activity, Trash2, Pill, Edit2, Bell, Check, Info } from 'lucide-react';
+import { AlarmClock, Timer, Plus, X, Activity, Trash2, Pill, Edit2, Bell, Check, Info, ChevronUp, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { INITIAL_MORNING_ROUTINES, INITIAL_EVENING_ROUTINES, INITIAL_DAILY_TASKS, INITIAL_SUPPLEMENTS } from '../constants';
@@ -233,6 +233,36 @@ export default function Routines({
     }
   };
 
+  const handleMove = (group: 'morning' | 'evening' | 'daily' | 'supplement', index: number, direction: 'up' | 'down') => {
+    const swap = (arr: any[], i1: number, i2: number) => {
+      const copy = [...arr];
+      const temp = copy[i1];
+      copy[i1] = copy[i2];
+      copy[i2] = temp;
+      return copy;
+    };
+
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+
+    if (group === 'morning') {
+      if (targetIndex >= 0 && targetIndex < routines.length) {
+        setRoutines(swap(routines, index, targetIndex));
+      }
+    } else if (group === 'evening') {
+      if (targetIndex >= 0 && targetIndex < eveningRoutines.length) {
+        setEveningRoutines(swap(eveningRoutines, index, targetIndex));
+      }
+    } else if (group === 'daily') {
+      if (targetIndex >= 0 && targetIndex < dailyTasks.length) {
+        setDailyTasks(swap(dailyTasks, index, targetIndex));
+      }
+    } else if (group === 'supplement') {
+      if (targetIndex >= 0 && targetIndex < supplements.length) {
+        setSupplements(swap(supplements, index, targetIndex));
+      }
+    }
+  };
+
   return (
     <div className="space-y-10">
       {/* Header */}
@@ -252,10 +282,10 @@ export default function Routines({
 
       {/* Routine Lists */}
       <div className="space-y-8">
-        <RoutineGroup title="Tagesaufgaben" items={mappedDailyTasks} group="daily" onEdit={openEditModal} />
-        <RoutineGroup title="Morgen-Routine" items={mappedRoutines} group="morning" onEdit={openEditModal} />
-        <RoutineGroup title="Supplemente" items={mappedSupplements} group="supplement" onEdit={openEditModal} />
-        <RoutineGroup title="Abend-Routine" items={mappedEveningRoutines} group="evening" onEdit={openEditModal} />
+        <RoutineGroup title="Tagesaufgaben" items={mappedDailyTasks} group="daily" onEdit={openEditModal} onMove={handleMove} />
+        <RoutineGroup title="Morgen-Routine" items={mappedRoutines} group="morning" onEdit={openEditModal} onMove={handleMove} />
+        <RoutineGroup title="Supplemente" items={mappedSupplements} group="supplement" onEdit={openEditModal} onMove={handleMove} />
+        <RoutineGroup title="Abend-Routine" items={mappedEveningRoutines} group="evening" onEdit={openEditModal} onMove={handleMove} />
         
         {routines.length === 0 && dailyTasks.length === 0 && supplements.length === 0 && eveningRoutines.length === 0 && (
           <div className="bg-surface-container-low p-8 rounded-sm text-center border border-dashed border-outline-variant/30">
@@ -567,13 +597,13 @@ export default function Routines({
   );
 }
 
-function RoutineGroup({ title, items, group, onEdit }: any) {
+function RoutineGroup({ title, items, group, onEdit, onMove }: any) {
   if (items.length === 0) return null;
   return (
     <section>
       <h3 className="text-[0.6875rem] tracking-wider uppercase text-yellow-400 mb-3 font-medium">{title}</h3>
       <div className="grid grid-cols-1 gap-3">
-        {items.map((item: any) => {
+        {items.map((item: any, index: number) => {
           const IconComponent = item.icon || Pill;
           return (
             <RoutineCard 
@@ -582,6 +612,8 @@ function RoutineGroup({ title, items, group, onEdit }: any) {
               comment={item.value || item.time}
               icon={<IconComponent size={20} className="text-yellow-400" />}
               onClick={() => onEdit(item, group)}
+              onMoveUp={index > 0 ? (e: any) => { e.stopPropagation(); onMove(group, index, 'up'); } : null}
+              onMoveDown={index < items.length - 1 ? (e: any) => { e.stopPropagation(); onMove(group, index, 'down'); } : null}
             />
           );
         })}
@@ -590,13 +622,32 @@ function RoutineGroup({ title, items, group, onEdit }: any) {
   );
 }
 
-function RoutineCard({ title, icon, comment, onClick }: any) {
+function RoutineCard({ title, icon, comment, onClick, onMoveUp, onMoveDown }: any) {
   return (
     <div 
       onClick={onClick}
       className="bg-surface-container-low p-5 rounded-sm group hover:bg-surface-container-high transition-colors relative cursor-pointer"
     >
       <div className="absolute top-4 right-4 flex items-center gap-1">
+        <div className="flex items-center gap-0.5 border-r border-outline-variant/10 pr-2 mr-1">
+          <button
+            disabled={!onMoveUp}
+            onClick={onMoveUp}
+            className={`p-1.5 rounded transition-colors ${onMoveUp ? 'text-on-surface-variant/70 hover:text-yellow-400 hover:bg-surface-container-highest' : 'text-on-surface-variant/20 cursor-not-allowed'}`}
+            title="Nach oben verschieben"
+          >
+            <ChevronUp size={16} />
+          </button>
+          <button
+            disabled={!onMoveDown}
+            onClick={onMoveDown}
+            className={`p-1.5 rounded transition-colors ${onMoveDown ? 'text-on-surface-variant/70 hover:text-yellow-400 hover:bg-surface-container-highest' : 'text-on-surface-variant/20 cursor-not-allowed'}`}
+            title="Nach unten verschieben"
+          >
+            <ChevronDown size={16} />
+          </button>
+        </div>
+
         <div className="p-2 text-on-surface-variant/50 group-hover:text-yellow-400 transition-colors rounded-full">
           <Edit2 size={16} />
         </div>
@@ -604,7 +655,7 @@ function RoutineCard({ title, icon, comment, onClick }: any) {
           {icon}
         </div>
       </div>
-      <div className="pr-24">
+      <div className="pr-36">
         <h3 className="font-headline text-lg font-bold flex-1 break-all hyphens-auto">{title}</h3>
       </div>
     </div>

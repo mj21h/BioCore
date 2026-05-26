@@ -1,5 +1,24 @@
-import { Capacitor } from '@capacitor/core';
+import { Capacitor, registerPlugin } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
+
+export interface AlarmSyncPluginType {
+  getNextAlarm(): Promise<{ time: string | null; timestamp?: number }>;
+}
+
+const AlarmSync = registerPlugin<AlarmSyncPluginType>('AlarmSync');
+
+// Fetch the next alarm from the Android system clock
+export async function getSystemNextAlarm(): Promise<string | null> {
+  if (!Capacitor.isNativePlatform()) return null;
+  try {
+    const result = await AlarmSync.getNextAlarm();
+    console.log('Fetched system next alarm:', result);
+    return result.time; // Format: "HH:MM" or null
+  } catch (e) {
+    console.error('Error fetching system alarm clock:', e);
+    return null;
+  }
+}
 
 // Hash function to convert string ID to numeric ID
 export function stringToHash(str: string): number {
