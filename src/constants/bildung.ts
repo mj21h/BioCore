@@ -223,6 +223,33 @@ export const LIBRARY_ITEMS = [
     image: 'https://picsum.photos/seed/squat_health/800/400',
     emoji: '🦵',
     duration: '11:15'
+  },
+  {
+    id: 'maenner_gesundheit',
+    title: 'Warum Männer still sterben',
+    description: 'In diesem tiefgründigen Beitrag beleuchtet Oscar Karem die gesellschaftlichen Tabus rund um die psychische Gesundheit von Männern. Das Video analysiert die fatalen Folgen von emotionaler Unterdrückung, herrschenden Rollenbildern und dem schweigenden Leiden, das oft unbemerkt bleibt, und bietet Impulse für echte Heilung und Offenheit.',
+    url: 'https://youtu.be/ZxuoQyzMXkE?si=nNBezh87QzRwO1Lp',
+    image: 'https://picsum.photos/seed/men_health/800/400',
+    emoji: '🧔',
+    duration: '22:14'
+  },
+  {
+    id: 'health_metrics',
+    title: 'Gesundheitsdaten richtig tracken',
+    description: 'In diesem umfassenden Leitfaden erklärt Howon Noh, welche gesundheitlichen Parameter und Biomarker – von Schlafphasen und Herzfrequenzvariabilität (HRV) bis hin zu wichtigen Blutwerten – wirklich entscheidend sind. Das Video zeigt strukturiert, wie du diese Daten mithilfe von Wearables und regelmäßigen Tests analysierst, um deine Vitalität gezielt zu optimieren.',
+    url: 'https://youtu.be/1wVpfHiilis?si=nGudfEEhPQLIUcsX',
+    image: 'https://picsum.photos/seed/health_metrics/800/400',
+    emoji: '📊',
+    duration: '18:45'
+  },
+  {
+    id: 'exercising_wrong',
+    title: 'Richtig trainieren für Langlebigkeit',
+    description: 'Bryan Johnson, Gründer des Blueprint-Projekts, räumt mit gängigen Fitnessmythen auf. Er erläutert wissenschaftlich präzise, wie die optimale Kombination aus Zone-2-Ausdauertraining, High-Intensity Interval Training (HIIT) und gezieltem Krafttraining aussehen muss, um die mitochondriale Fitness nachhaltig zu steigern und biologisch jünger zu werden.',
+    url: 'https://youtu.be/JNuORofHhrk?si=l_B7DHbFK1WkumYW',
+    image: 'https://picsum.photos/seed/exercising_wrong/800/400',
+    emoji: '🏃‍♂️',
+    duration: '13:42'
   }
 ];
 
@@ -237,7 +264,7 @@ export const GROUPS = [
     id: 'level-2',
     title: 'Level 2: Körper',
     bonus: 7500,
-    itemIds: ['schlaf', 'ernaehrung', 'routine', 'lebensmittelreinigung', 'kniebeugen_video']
+    itemIds: ['schlaf', 'ernaehrung', 'routine', 'lebensmittelreinigung', 'kniebeugen_video', 'exercising_wrong']
   },
   {
     id: 'level-3',
@@ -249,12 +276,12 @@ export const GROUPS = [
     id: 'level-4',
     title: 'Level 4: Geist',
     bonus: 15000,
-    itemIds: ['meditation', 'stoizismus', 'bewusstsein', 'diagnostik', 'darmgesundheit', 'gluecksforschung']
+    itemIds: ['meditation', 'stoizismus', 'bewusstsein', 'diagnostik', 'darmgesundheit', 'gluecksforschung', 'health_metrics']
   },
   {
     id: 'bonus',
     title: 'Bonus: Gesellschaft',
     bonus: 25000,
-    itemIds: ['gesellschaftskritik', 'massenpsychologie', 'zensierte_buecher', 'strassenweisheiten', 'finanzsystem']
+    itemIds: ['gesellschaftskritik', 'massenpsychologie', 'zensierte_buecher', 'strassenweisheiten', 'finanzsystem', 'maenner_gesundheit']
   }
 ];

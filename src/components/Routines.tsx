@@ -43,6 +43,14 @@ export default function Routines({
   const [activeGroup, setActiveGroup] = useState<'morning' | 'evening' | 'daily'>('daily');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'info' | 'error' } | null>(null);
+
+  const showToast = (text: string, type: 'success' | 'info' | 'error' = 'success') => {
+    setToastMessage({ text, type });
+    setTimeout(() => {
+      setToastMessage(prev => prev?.text === text ? null : prev);
+    }, 3000);
+  };
 
   // Form state
   const [newTitle, setNewTitle] = useState('');
@@ -213,14 +221,14 @@ export default function Routines({
           setNotificationsEnabled(true);
           await showTestNotification();
         } else {
-          alert('Benachrichtigungs-Berechtigung wurde abgelehnt oder blockiert. Bitte aktiviere sie in deinen Geräteeinstellungen.');
+          showToast('Benachrichtigungs-Berechtigung wurde abgelehnt oder blockiert. Bitte aktiviere sie in deinen Geräteeinstellungen.', 'error');
         }
       } else {
         setNotificationsEnabled(false);
       }
     } catch (error) {
       console.error('Error toggling notifications:', error);
-      alert('Fehler beim Aktivieren der Benachrichtigungen. Bitte versuche es erneut.');
+      showToast('Fehler beim Aktivieren der Benachrichtigungen. Bitte versuche es erneut.', 'error');
     }
   };
 
@@ -229,7 +237,7 @@ export default function Routines({
     if (notificationsEnabled && permGranted) {
       await showTestNotification();
     } else {
-      alert('Bitte aktiviere zuerst die Push-Benachrichtigungen.');
+      showToast('Bitte aktiviere zuerst die Push-Benachrichtigungen.', 'info');
     }
   };
 
@@ -591,6 +599,25 @@ export default function Routines({
               </div>
             </motion.div>
           </>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Toast Notification */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className="fixed bottom-24 left-4 right-4 z-[100] flex justify-center pointer-events-none"
+          >
+            <div className="bg-surface-container-highest border border-yellow-400/30 shadow-2xl rounded-xl p-4 flex items-center gap-3 w-full max-w-md pointer-events-auto">
+              <span className="text-base select-none">
+                {toastMessage.type === 'success' ? '✅' : toastMessage.type === 'error' ? '❌' : 'ℹ️'}
+              </span>
+              <p className="text-sm font-medium text-on-surface">{toastMessage.text}</p>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Zap } from 'lucide-react';
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -569,21 +569,28 @@ export default function App() {
     setLastDeleted(null);
   };
 
+  // Keep values in ref to avoid race conditions and stale closures during dynamic daily reset
+  const checkNewDayStateRef = useRef({ profile, todayXP, bildungXP, routines, supplements, eveningRoutines, dailyTasks });
+  useEffect(() => {
+    checkNewDayStateRef.current = { profile, todayXP, bildungXP, routines, supplements, eveningRoutines, dailyTasks };
+  }, [profile, todayXP, bildungXP, routines, supplements, eveningRoutines, dailyTasks]);
+
   // Check for new day on mount and periodically
   useEffect(() => {
     const checkNewDay = () => {
       const today = new Date().toDateString();
-      if (profile.lastResetDate !== today) {
+      const current = checkNewDayStateRef.current;
+      if (current.profile.lastResetDate !== today) {
         // It's a new day!
         // Add only todayXP (from tasks) to totalXP. 
         // libraryXP is cumulative and handled separately in currentTotalXP calculation.
-        let newTotalXP = profile.totalXP + todayXP;
+        let newTotalXP = current.profile.totalXP + current.todayXP;
         
         // Calculate new level
-        let newLevel = getLevelFromXP(newTotalXP + bildungXP);
+        let newLevel = getLevelFromXP(newTotalXP + current.bildungXP);
 
         setProfile({
-          ...profile,
+          ...current.profile,
           level: newLevel,
           totalXP: newTotalXP,
           lastResetDate: today
@@ -595,10 +602,10 @@ export default function App() {
         // Reset completion status of all tasks
         const resetItems = (items: any[]) => items.map(item => ({ ...item, completed: false }));
         
-        setRoutines(resetItems(routines));
-        setSupplements(resetItems(supplements));
-        setEveningRoutines(resetItems(eveningRoutines));
-        setDailyTasks(resetItems(dailyTasks));
+        setRoutines(resetItems(current.routines));
+        setSupplements(resetItems(current.supplements));
+        setEveningRoutines(resetItems(current.eveningRoutines));
+        setDailyTasks(resetItems(current.dailyTasks));
         
         // Reset sent notifications for the new day
         setSentNotifications([]);
@@ -610,7 +617,7 @@ export default function App() {
     checkNewDay();
     const interval = setInterval(checkNewDay, 60000); // Check every minute
     return () => clearInterval(interval);
-  }, [profile, todayXP, bildungXP, routines, supplements, eveningRoutines, dailyTasks, setProfile, setTodayXP, setRoutines, setSupplements, setEveningRoutines, setDailyTasks]);
+  }, [setProfile, setTodayXP, setRoutines, setSupplements, setEveningRoutines, setDailyTasks, setSentNotifications, setFireworksTriggered, setLastResetDate]);
 
   // Check for routine reminders
   useEffect(() => {

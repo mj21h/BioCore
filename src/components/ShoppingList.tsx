@@ -36,13 +36,21 @@ export default function ShoppingList({
   const toggleCategory = (catName: string) => {
     setExpandedCategories(prev => ({
       ...prev,
-      [catName]: !prev[catName]
+      [catName]: prev[catName] === false ? true : false
     }));
   };
   const [isRoutineModalOpen, setIsRoutineModalOpen] = useState(false);
   const [selectedItemForRoutine, setSelectedItemForRoutine] = useState<ShoppingItem | null>(null);
   const [routineTime, setRoutineTime] = useState('Morgens');
   const [routineGroup, setRoutineGroup] = useState<'morning' | 'daily' | 'supplement' | 'evening'>('supplement');
+  const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'info' | 'error' } | null>(null);
+
+  const showToast = (text: string, type: 'success' | 'info' | 'error' = 'success') => {
+    setToastMessage({ text, type });
+    setTimeout(() => {
+      setToastMessage(prev => prev?.text === text ? null : prev);
+    }, 3000);
+  };
 
   const toggleItem = (catIndex: number, itemIndex: number) => {
     const category = shoppingList[catIndex];
@@ -121,9 +129,9 @@ export default function ShoppingList({
           completed: false
         });
         setSupplements(newSupps);
-        alert(`${selectedItemForRoutine.name} wurde zu deinen Supplementen hinzugefügt! 💊`);
+        showToast(`${selectedItemForRoutine.name} wurde zu deinen Supplementen hinzugefügt! 💊`, 'success');
       } else {
-        alert(`${selectedItemForRoutine.name} ist bereits in deinen Supplementen vorhanden.`);
+        showToast(`${selectedItemForRoutine.name} ist bereits in deinen Supplementen vorhanden.`, 'info');
       }
     } else {
       const newItem = {
@@ -143,7 +151,7 @@ export default function ShoppingList({
         setDailyTasks([...dailyTasks, newItem]);
       }
       
-      alert(`${selectedItemForRoutine.name} wurde zu deinen Routinen hinzugefügt! 🚀`);
+      showToast(`${selectedItemForRoutine.name} wurde zu deinen Routinen hinzugefügt! 🚀`, 'success');
     }
 
     setIsRoutineModalOpen(false);
@@ -168,6 +176,8 @@ export default function ShoppingList({
           const catCheckedCount = category.items.filter(item => item.completed).length;
           const isSupplements = category.category === 'Supplemente';
 
+          const isExpanded = expandedCategories[category.category] !== false;
+
           return (
             <div key={catIndex} className="bg-surface-container-low rounded-sm overflow-hidden border border-outline-variant/10">
               <div 
@@ -183,12 +193,12 @@ export default function ShoppingList({
                   )}
                 </div>
                 <div className="text-on-surface-variant/70 group-hover:text-yellow-400 transition-colors">
-                  {expandedCategories[category.category] ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                  {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                 </div>
               </div>
               
               <AnimatePresence initial={false}>
-                {expandedCategories[category.category] && (
+                {isExpanded && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
@@ -386,6 +396,25 @@ export default function ShoppingList({
               </div>
             </motion.div>
           </>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Toast Notification */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className="fixed bottom-24 left-4 right-4 z-[100] flex justify-center pointer-events-none"
+          >
+            <div className="bg-surface-container-highest border border-yellow-400/30 shadow-2xl rounded-xl p-4 flex items-center gap-3 w-full max-w-md pointer-events-auto">
+              <span className="text-base select-none">
+                {toastMessage.type === 'success' ? '✅' : toastMessage.type === 'error' ? '❌' : 'ℹ️'}
+              </span>
+              <p className="text-sm font-medium text-on-surface">{toastMessage.text}</p>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
