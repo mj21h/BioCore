@@ -1,7 +1,3 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
-
 # BioCore: Deine Biohacking & Lifestyle App
 
 **BioCore** ist deine ultimative App zur ganzheitlichen Optimierung von Körper, Geist und Alltag. Basierend auf bewährten Biohacking-Prinzipien hilft dir BioCore dabei, gesunde Gewohnheiten zu etablieren, deine Ernährung zu optimieren und kontinuierlich an dir zu wachsen. Durch ein motivierendes Gamification-System bleibst du jeden Tag am Ball.
@@ -37,4 +33,3 @@ Wissen ist Macht. In der integrierten Bildungs-Sektion kannst du dir Videos und 
 <div align="center">
   <img width="800" alt="Education Preview" src="https://placehold.co/800x450/1a1a1a/facc15?text=Wissensdatenbank+%26+Lernen" />
 </div>
-
