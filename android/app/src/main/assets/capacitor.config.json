@@ -1,5 +1,6 @@
 {
 	"appId": "com.biohacker.app",
 	"appName": "Biohacker App",
-	"webDir": "dist"
+	"webDir": "dist",
+	"backgroundColor": "#111317"
 }

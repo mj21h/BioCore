@@ -36,7 +36,7 @@ export default function App() {
     if (Capacitor.isNativePlatform()) {
       SplashScreen.hide();
       StatusBar.setStyle({ style: Style.Dark });
-      StatusBar.setBackgroundColor({ color: '#0a0a0a' });
+      StatusBar.setBackgroundColor({ color: '#111317' });
     }
   }, []);
 
@@ -707,6 +707,20 @@ export default function App() {
     ];
 
     allItems.forEach(item => {
+      // Spezieller Fall für "Wasser trinken" (Mehrmals täglich)
+      if (item.id === 'd1' || item.title.toLowerCase().includes('wasser trinken')) {
+        const waterTimes = ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00'];
+        waterTimes.forEach((time, index) => {
+          scheduleItems.push({
+            id: `${item.id}_${index}`,
+            title: `Erinnerung: ${item.title}`,
+            body: `Gib deinem Körper was er braucht. Zeit für ein Glas Wasser! 💧`,
+            time: time
+          });
+        });
+        return;
+      }
+
       let reminderTime = item.reminderTime;
 
       // Handle Wecker Sync (+5 min)
