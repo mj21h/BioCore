@@ -38,38 +38,40 @@ export default function Layout({
   return (
     <div className="min-h-screen flex flex-col max-w-md mx-auto relative overflow-x-hidden">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-16 bg-background/80 backdrop-blur-md border-b border-surface-container-low max-w-md mx-auto">
-        <div 
-          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={onOpenProfile}
-        >
-          <div className="w-10 h-10 rounded-full overflow-hidden border border-outline-variant/20">
-            <img 
-              src={profile.avatarUrl} 
-              alt="Profile" 
-              className="w-full h-full object-cover"
-              referrerPolicy="no-referrer"
-            />
+      <header className="fixed top-0 left-0 right-0 z-50 pt-[env(safe-area-inset-top)] bg-background/80 backdrop-blur-md border-b border-surface-container-low max-w-md mx-auto">
+        <div className="flex items-center justify-between px-6 h-16">
+          <div 
+            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={onOpenProfile}
+          >
+            <div className="w-10 h-10 rounded-full overflow-hidden border border-outline-variant/20">
+              <img 
+                src={profile.avatarUrl} 
+                alt="Profile" 
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-yellow-400 font-headline font-bold text-lg leading-tight tracking-tight">
+                {profile.name}
+              </h1>
+              <span className="text-[0.625rem] text-on-surface-variant font-bold uppercase tracking-widest">
+                LVL {displayLevel} • {displayTotalXP.toLocaleString('de-DE')} XP
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <h1 className="text-yellow-400 font-headline font-bold text-lg leading-tight tracking-tight">
-              {profile.name}
-            </h1>
-            <span className="text-[0.625rem] text-on-surface-variant font-bold uppercase tracking-widest">
-              LVL {displayLevel} • {displayTotalXP.toLocaleString('de-DE')} XP
-            </span>
-          </div>
+          <button 
+            onClick={() => setActiveTab('routines')}
+            className={`hover:bg-surface-container-highest transition-colors p-2 rounded-full active:scale-95 ${activeTab === 'routines' ? 'text-yellow-400 bg-surface-container-highest' : 'text-on-surface-variant'}`}
+          >
+            <Settings size={24} />
+          </button>
         </div>
-        <button 
-          onClick={() => setActiveTab('routines')}
-          className={`hover:bg-surface-container-highest transition-colors p-2 rounded-full active:scale-95 ${activeTab === 'routines' ? 'text-yellow-400 bg-surface-container-highest' : 'text-on-surface-variant'}`}
-        >
-          <Settings size={24} />
-        </button>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 pt-24 pb-32 px-6">
+      <main className="flex-1 pt-[calc(6rem+env(safe-area-inset-top))] pb-[calc(8rem+env(safe-area-inset-bottom))] px-6">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -84,27 +86,29 @@ export default function Layout({
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 glass-panel h-20 flex justify-around items-center px-4 max-w-md mx-auto">
-        <NavButton 
-          active={activeTab === 'dashboard'} 
-          onClick={() => setActiveTab('dashboard')}
-          icon={<Repeat size={24} />}
-          label="Fortschritt"
-          hasNotification={hasPendingFortschritt}
-        />
-        <NavButton 
-          active={activeTab === 'einkaufsliste'} 
-          onClick={() => setActiveTab('einkaufsliste')}
-          icon={<ShoppingCart size={24} />}
-          label="Einkauf"
-        />
-        <NavButton 
-          active={activeTab === 'bildung'} 
-          onClick={() => setActiveTab('bildung')}
-          icon={<GraduationCap size={24} />}
-          label="Bildung"
-          hasNotification={hasPendingBildung}
-        />
+      <nav className="fixed bottom-0 left-0 right-0 z-50 glass-panel pb-[env(safe-area-inset-bottom)] max-w-md mx-auto">
+        <div className="flex justify-around items-center px-4 h-20">
+          <NavButton 
+            active={activeTab === 'dashboard'} 
+            onClick={() => setActiveTab('dashboard')}
+            icon={<Repeat size={24} />}
+            label="Fortschritt"
+            hasNotification={hasPendingFortschritt}
+          />
+          <NavButton 
+            active={activeTab === 'einkaufsliste'} 
+            onClick={() => setActiveTab('einkaufsliste')}
+            icon={<ShoppingCart size={24} />}
+            label="Einkauf"
+          />
+          <NavButton 
+            active={activeTab === 'bildung'} 
+            onClick={() => setActiveTab('bildung')}
+            icon={<GraduationCap size={24} />}
+            label="Bildung"
+            hasNotification={hasPendingBildung}
+          />
+        </div>
       </nav>
     </div>
   );
