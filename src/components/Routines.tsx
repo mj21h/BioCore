@@ -489,8 +489,13 @@ export default function Routines({
                       <select 
                         value={newGroup}
                         onChange={(e) => {
-                          setNewGroup(e.target.value as any);
-                          setNewReminderTime('');
+                          const val = e.target.value as any;
+                          setNewGroup(val);
+                          if (val === 'daily') {
+                            setNewReminderTime('every_2h_8_18');
+                          } else {
+                            setNewReminderTime('');
+                          }
                         }}
                         className="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 text-on-surface focus:outline-none focus:border-yellow-400 transition-colors appearance-none"
                       >

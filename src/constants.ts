@@ -91,8 +91,8 @@ export const INITIAL_EVENING_ROUTINES: RoutineItem[] = [
 ];
 
 export const INITIAL_DAILY_TASKS: RoutineItem[] = [
-  { id: 'd1', title: 'Wasser trinken', value: '2 LITER', icon: 'Droplets', completed: false, color: 'text-yellow-400' },
-  { id: 'd2', title: 'Bewegen', value: '10.000 SCHRITTE', icon: 'Footprints', completed: false, color: 'text-yellow-400' },
+  { id: 'd1', title: 'Wasser trinken', value: '2 LITER', icon: 'Droplets', completed: false, color: 'text-yellow-400', reminderTime: 'every_2h_8_18' },
+  { id: 'd2', title: 'Bewegen', value: '10.000 SCHRITTE', icon: 'Footprints', completed: false, color: 'text-yellow-400', reminderTime: 'every_2h_8_18' },
 ];
 
 export const INITIAL_SUPPLEMENTS: Supplement[] = [
