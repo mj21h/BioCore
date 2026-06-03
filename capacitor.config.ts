@@ -4,15 +4,15 @@ const config: CapacitorConfig = {
   appId: 'com.biohacker.app',
   appName: 'Biohacker App',
   webDir: 'dist',
-  backgroundColor: '#111317',
+  backgroundColor: '#0a0a0a',
   plugins: {
     SplashScreen: {
       launchShowDuration: 2000,
-      backgroundColor: "#111317",
+      backgroundColor: "#0a0a0a",
     },
     StatusBar: {
       style: "DARK",
-      backgroundColor: "#111317",
+      backgroundColor: "#0a0a0a",
       overlaysWebView: false
     }
   }

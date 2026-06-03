@@ -36,7 +36,7 @@ export default function Layout({
   const displayLevel = getLevelFromXP(displayTotalXP);
 
   return (
-    <div className="min-h-screen flex flex-col max-w-md mx-auto relative overflow-hidden">
+    <div className="min-h-screen flex flex-col max-w-md mx-auto relative overflow-x-hidden">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-16 bg-background/80 backdrop-blur-md border-b border-surface-container-low max-w-md mx-auto">
         <div 

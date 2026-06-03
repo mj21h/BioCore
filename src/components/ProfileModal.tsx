@@ -223,7 +223,7 @@ export default function ProfileModal({ isOpen, onClose, profile, todayXP, bildun
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-0 left-0 right-0 bg-surface border-t border-outline-variant/20 rounded-t-3xl z-[70] max-w-md mx-auto overflow-hidden pb-safe"
+            className="fixed bottom-0 left-0 right-0 bg-surface border-t border-outline-variant/20 rounded-t-3xl z-[70] max-w-md mx-auto max-h-[90dvh] overflow-y-auto custom-scrollbar pb-safe"
           >
             <div className="p-6">
               <div className="flex justify-between items-center mb-8">

@@ -398,7 +398,7 @@ export default function Routines({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed bottom-0 left-0 right-0 bg-surface border-t border-outline-variant/20 rounded-t-3xl z-[70] max-w-md mx-auto overflow-hidden pb-safe"
+              className="fixed bottom-0 left-0 right-0 bg-surface border-t border-outline-variant/20 rounded-t-3xl z-[70] max-w-md mx-auto max-h-[90dvh] overflow-y-auto custom-scrollbar pb-safe"
             >
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
@@ -483,10 +483,34 @@ export default function Routines({
                   
                   <div>
                     <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">
-                      {newGroup === 'supplement' ? 'Zeitpunkt' : 'Routine-Gruppe'}
+                      Routine-Gruppe
                     </label>
                     <div className="relative">
-                      {newGroup === 'supplement' ? (
+                      <select 
+                        value={newGroup}
+                        onChange={(e) => {
+                          setNewGroup(e.target.value as any);
+                          setNewReminderTime('');
+                        }}
+                        className="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 text-on-surface focus:outline-none focus:border-yellow-400 transition-colors appearance-none"
+                      >
+                        <option value="daily">Tagesaufgaben</option>
+                        <option value="morning">Morgen-Routine</option>
+                        <option value="supplement">Supplemente</option>
+                        <option value="evening">Abend-Routine</option>
+                      </select>
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  {newGroup === 'supplement' && (
+                    <div>
+                      <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                        Zeitpunkt
+                      </label>
+                      <div className="relative">
                         <select 
                           value={newTime}
                           onChange={(e) => setNewTime(e.target.value as any)}
@@ -496,23 +520,12 @@ export default function Routines({
                           <option value="Nach dem Frühstück">Nach dem Frühstück</option>
                           <option value="Abends">Abends</option>
                         </select>
-                      ) : (
-                        <select 
-                          value={newGroup}
-                          onChange={(e) => setNewGroup(e.target.value as any)}
-                          className="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 text-on-surface focus:outline-none focus:border-yellow-400 transition-colors appearance-none"
-                        >
-                          <option value="daily">Tagesaufgaben</option>
-                          <option value="morning">Morgen-Routine</option>
-                          <option value="supplement">Supplemente</option>
-                          <option value="evening">Abend-Routine</option>
-                        </select>
-                      )}
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
 
                   <div>
                     <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Kommentar / Info (z.B. 200ml)</label>
@@ -552,7 +565,21 @@ export default function Routines({
                       )}
                     </div>
 
-                    {!newReminderSync ? (
+                    {newGroup === 'daily' ? (
+                      <div className="relative">
+                        <select 
+                          value={newReminderTime}
+                          onChange={(e) => setNewReminderTime(e.target.value)}
+                          className="w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg px-3 py-2 text-on-surface focus:outline-none focus:border-yellow-400 appearance-none"
+                        >
+                          <option value="">Keine Erinnerung</option>
+                          <option value="every_2h_8_18">Alle 2 Stunden (08:00 - 18:00 Uhr)</option>
+                        </select>
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant flex items-center justify-center">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                        </div>
+                      </div>
+                    ) : !newReminderSync ? (
                       <div className="flex items-center gap-3">
                         <input 
                           type="time" 

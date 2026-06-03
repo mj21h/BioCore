@@ -36,7 +36,7 @@ export default function App() {
     if (Capacitor.isNativePlatform()) {
       SplashScreen.hide();
       StatusBar.setStyle({ style: Style.Dark });
-      StatusBar.setBackgroundColor({ color: '#111317' });
+      StatusBar.setBackgroundColor({ color: '#0a0a0a' });
     }
   }, []);
 
@@ -646,15 +646,22 @@ export default function App() {
           reminderTime = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
         }
 
-        if (reminderTime && currentTime === reminderTime) {
-          const notificationId = `${today}_${item.id}`;
-          if (!sentNotifications.includes(notificationId)) {
-            const notif = new Notification(`Erinnerung: ${item.title}`, {
-              body: `Zeit für deine ${item.type}: ${item.title}.`,
-              icon: '/favicon.ico'
-            });
-            notif.onclick = () => window.focus();
-            setSentNotifications(prev => [...prev, notificationId]);
+        if (reminderTime) {
+          let timesToCheck = [reminderTime];
+          if (reminderTime === 'every_2h_8_18') {
+            timesToCheck = ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00'];
+          }
+
+          if (timesToCheck.includes(currentTime)) {
+            const notificationId = `${today}_${item.id}_${currentTime}`;
+            if (!sentNotifications.includes(notificationId)) {
+              const notif = new Notification(`Erinnerung: ${item.title}`, {
+                body: `Zeit für deine ${item.type}: ${item.title}.`,
+                icon: '/favicon.ico'
+              });
+              notif.onclick = () => window.focus();
+              setSentNotifications(prev => [...prev, notificationId]);
+            }
           }
         }
       });
@@ -732,12 +739,24 @@ export default function App() {
       }
 
       if (reminderTime) {
-        scheduleItems.push({
-          id: item.id,
-          title: `Erinnerung: ${item.title}`,
-          body: `Zeit für deine ${item.type}: ${item.title}.`,
-          time: reminderTime
-        });
+        if (reminderTime === 'every_2h_8_18') {
+          const times = ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00'];
+          times.forEach((t, index) => {
+            scheduleItems.push({
+              id: `${item.id}_${index}`,
+              title: `Erinnerung: ${item.title}`,
+              body: `Zeit für deine ${item.type}: ${item.title}.`,
+              time: t
+            });
+          });
+        } else {
+          scheduleItems.push({
+            id: item.id,
+            title: `Erinnerung: ${item.title}`,
+            body: `Zeit für deine ${item.type}: ${item.title}.`,
+            time: reminderTime
+          });
+        }
       }
     });
 
